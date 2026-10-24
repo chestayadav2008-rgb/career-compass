@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Compass AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+:root{--blue:#2563eb;--purple:#7c3aed;--dark:#172033;--muted:#64748b;--bg:#f5f8ff;--card:#fff;--line:#dbe4f0}
+body{min-height:100vh;color:var(--dark);background:var(--bg)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.page{min-height:100vh}
+#home{padding:65px 24px 55px;text-align:center;background:linear-gradient(135deg,#eef4ff,#fbf9ff)}
+.logo{width:76px;height:76px;margin:0 auto 18px;border-radius:22px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;display:flex;align-items:center;justify-content:center;font-size:29px;font-weight:900;box-shadow:0 15px 35px #2563eb30}
+.brand{font-weight:800;color:var(--blue);letter-spacing:2px;margin-bottom:18px}
+#home h1{font-size:clamp(38px,6vw,70px);line-height:1.05}
+#home h1 span{color:var(--blue)}
+.intro{max-width:720px;margin:22px auto 38px;color:var(--muted);font-size:18px;line-height:1.65}
+.features{max-width:1080px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.feature-btn{border:1px solid var(--line);background:#fff;border-radius:20px;padding:25px 15px;font-weight:800;color:#1e293b;box-shadow:0 10px 30px #0f172a0d;transition:.25s}
+.feature-btn:hover{transform:translateY(-6px);border-color:var(--blue);color:var(--blue);box-shadow:0 18px 38px #2563eb20}
+.icon{display:block;font-size:30px;margin-bottom:12px}
+.registration{margin-top:52px}
+.registration p{color:var(--muted);margin-bottom:14px}
+.primary{border:0;border-radius:13px;padding:15px 30px;background:var(--blue);color:#fff;font-weight:800;transition:.25s}
+.primary:hover{transform:translateY(-3px);box-shadow:0 12px 28px #2563eb40}
+.dark-btn{background:var(--dark)}
+
+.header{background:#fff;border-bottom:1px solid var(--line);padding:16px 7%;display:flex;align-items:center;gap:13px;position:sticky;top:0;z-index:20}
+.header .logo{width:44px;height:44px;margin:0;border-radius:13px;font-size:17px;box-shadow:none}
+.header .brand{margin:0;color:var(--dark);font-size:18px}
+
+.container{max-width:900px;margin:45px auto;padding:0 20px}
+.title{text-align:center;margin-bottom:30px}
+.title h1{font-size:38px;margin-bottom:9px}.title p{color:var(--muted)}
+.form-card,.panel{background:#fff;padding:35px;border-radius:24px;box-shadow:0 14px 40px #0f172a12}
+.section{margin-bottom:34px}
+.section h2{font-size:21px;color:var(--blue);padding-bottom:10px;border-bottom:2px solid #eaf0fa;margin-bottom:19px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{display:flex;flex-direction:column;gap:7px;position:relative}
+.field.full{grid-column:1/-1}
+label{font-size:14px;font-weight:700}
+input,select,textarea{width:100%;padding:13px 14px;border:1px solid #cbd5e1;border-radius:11px;outline:none;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2563eb16}
+textarea{min-height:90px;resize:vertical}
+.submit-btn{width:100%;margin-top:8px}
+.back-btn{display:block;margin:17px auto 0;border:0;background:none;color:var(--blue);font-weight:800}
+
+.suggestions{position:absolute;left:0;right:0;top:73px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px #0f172a18;z-index:30;overflow:hidden}
+.suggestion{padding:11px 13px;text-align:left;border:0;background:#fff;width:100%;color:#334155}
+.suggestion:hover{background:#eff6ff;color:var(--blue)}
+.helper{font-size:12px;color:#94a3b8;margin-top:4px}
+
+.captcha-box{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.captcha-code{background:#eef2f7;border:1px dashed #94a3b8;padding:12px 20px;border-radius:10px;font-size:20px;font-weight:900;letter-spacing:4px;font-style:italic}
+.captcha-input{max-width:220px}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:#0f172a99;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modal{width:min(440px,100%);background:#fff;border-radius:22px;padding:30px;text-align:center}
+.warning-icon{font-size:44px;margin-bottom:10px}.modal h2{margin-bottom:9px}.modal p{color:var(--muted);line-height:1.55;margin-bottom:22px}
+.modal-buttons{display:flex;gap:12px}.modal-buttons button{flex:1;padding:13px;border-radius:10px;font-weight:800}
+.cancel-btn{background:#fff;border:1px solid #cbd5e1}.ok-btn{background:var(--blue);color:#fff;border:1px solid var(--blue)}
+
+.success-screen{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#eef4ff,#fbf9ff);z-index:90;align-items:center;justify-content:center;padding:20px;text-align:center}
+.success-card{width:min(650px,100%);background:#fff;border-radius:28px;padding:44px 30px;box-shadow:0 20px 60px #0f172a18}
+.tick{width:68px;height:68px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;margin:0 auto 20px}
+.success-card h1{font-size:34px;margin-bottom:12px}.success-card p{color:var(--muted);line-height:1.6;margin-bottom:25px}
+
+.career-page{padding:48px 22px 70px;background:linear-gradient(135deg,#f4f8ff,#fbf8ff)}
+.career-wrap{max-width:1100px;margin:auto}
+.progress{display:flex;gap:8px;margin-bottom:28px}.step{height:6px;flex:1;border-radius:99px;background:#dbe4f0}.step.active{background:linear-gradient(90deg,var(--blue),var(--purple))}
+.career-hero{text-align:center;margin-bottom:30px}.career-hero .mini-logo{width:65px;height:65px;border-radius:19px;margin:0 auto 14px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px}
+.career-hero h1{font-size:clamp(30px,5vw,48px)}.career-hero p{color:var(--muted);margin-top:10px}
+.interest-grid,.option-grid,.roadmap-grid,.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.choice{border:1px solid var(--line);background:#fff;border-radius:18px;padding:21px;text-align:left;transition:.2s;box-shadow:0 7px 22px #0f172a0a}
+.choice:hover,.choice.selected{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 12px 28px #2563eb18}
+.choice.selected{background:#eff6ff}
+.choice .emoji{font-size:29px;margin-bottom:11px}.choice h3{margin-bottom:6px}.choice p{color:var(--muted);font-size:14px;line-height:1.45}
+.section-head{text-align:center;margin:38px 0 20px}.section-head h2{font-size:28px}.section-head p{color:var(--muted);margin-top:7px}
+.actions{display:flex;justify-content:center;gap:12px;margin-top:27px;flex-wrap:wrap}
+.secondary{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:12px;padding:13px 23px;font-weight:800}
+.selected-career{margin-top:24px;background:#eef6ff;border:1px solid #bfdbfe;border-radius:16px;padding:15px;text-align:center;font-weight:700;color:#1d4ed8}
+
+.roadmap-controls{display:flex;gap:12px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.tab{padding:11px 18px;border:1px solid #cbd5e1;background:#fff;border-radius:11px;font-weight:800}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.week-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:23px;box-shadow:0 8px 25px #0f172a0b}
+.week-card h3{color:var(--blue);margin-bottom:7px}.week-card .focus{font-weight:800;margin-bottom:13px}.week-card ul{padding-left:20px;color:#475569;line-height:1.75}
+.badge{display:inline-block;margin-top:14px;padding:6px 9px;border-radius:99px;background:#f1f5f9;font-size:12px;font-weight:800}
+.resource{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px}.resource h3{margin-bottom:7px}.resource p{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:14px}.resource a{color:var(--blue);font-weight:800;text-decoration:none}.resource a:hover{text-decoration:underline}
+
+@media(max-width:800px){.features{grid-template-columns:repeat(2,1fr)}.interest-grid,.option-grid,.roadmap-grid,.resource-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.form-card{padding:22px}.features,.interest-grid,.option-grid,.roadmap-grid,.resource-grid{grid-template-columns:1fr}.title h1{font-size:29px}.career-page{padding:35px 16px}}
+</style>
+</head>
+<body>
+
+<section id="home" class="page">
+  <div class="logo">CC</div>
+  <div class="brand">CAREER COMPASS AI</div>
+  <h1>Discover Your Path.<br><span>Build Your Future.</span></h1>
+  <p class="intro">Turn your interests and skills into a clear career direction, identify the skills you need, and build a personalized roadmap for your future.</p>
+  <div class="features">
+    <button class="feature-btn" onclick="showMessage('Discover')"><span class="icon">🔍</span>Discover</button>
+    <button class="feature-btn" onclick="showMessage('Access')"><span class="icon">🚀</span>Access</button>
+    <button class="feature-btn" onclick="showMessage('Find Skill Gap')"><span class="icon">🎯</span>Find Skill Gap</button>
+    <button class="feature-btn" onclick="showMessage('Build Roadmap')"><span class="icon">🗺️</span>Build Roadmap</button>
+  </div>
+  <div class="registration">
+    <p>Ready to start your career journey?</p>
+    <button class="primary dark-btn" onclick="openRegistration()">Student Registration</button>
+  </div>
+</section>
+
+<section id="registrationPage" class="page hidden">
+<header class="header"><div class="logo">CC</div><div class="brand">Career Compass AI</div></header>
+<main class="container">
+  <div class="title"><h1>Student Registration</h1><p>Complete your details to begin your personalized career journey.</p></div>
+  <form class="form-card" id="registrationForm">
+    <section class="section"><h2>1. Personal Details</h2><div class="grid">
+      <div class="field">
+        <label>First Name *</label>
+        <input id="firstName" type="text" autocomplete="given-name" required>
+        <div id="firstSuggestions" class="suggestions hidden"></div>
+        <div class="helper">Previously used names can be selected from suggestions.</div>
+      </div>
+      <div class="field">
+        <label>Last Name *</label>
+        <input id="lastName" type="text" autocomplete="family-name" required>
+        <div id="lastSuggestions" class="suggestions hidden"></div>
+      </div>
+      <div class="field"><label>Date of Birth *</label><input type="date" required></div>
+      <div class="field"><label>Gender *</label><select required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select></div>
+      <div class="field full"><label>Current Education *</label><input type="text" placeholder="e.g. BCA 1st Semester" required></div>
+    </div></section>
+
+    <section class="section"><h2>2. Contact Details</h2><div class="grid">
+      <div class="field"><label>Email Address *</label><input type="email" autocomplete="email" required></div>
+      <div class="field"><label>Mobile Number *</label><input type="tel" maxlength="10" autocomplete="tel" required></div>
+    </div></section>
+
+    <section class="section"><h2>3. Address Details</h2><div class="grid">
+      <div class="field full"><label>Full Address *</label><textarea required></textarea></div>
+      <div class="field"><label>City *</label><input type="text" required></div>
+      <div class="field"><label>State *</label><input type="text" required></div>
+      <div class="field"><label>PIN Code *</label><input type="text" maxlength="6" required></div>
+    </div></section>
+
+    <section class="section"><h2>4. Verification</h2>
+      <div class="captcha-box"><div class="captcha-code" id="captchaCode"></div><input class="captcha-input" id="captchaInput" type="text" placeholder="Enter CAPTCHA" required></div>
+    </section>
+    <button class="primary submit-btn" type="submit">Submit Your Registration</button>
+    <button class="back-btn" type="button" onclick="goHome()">← Back to Home</button>
+  </form>
+</main>
+</section>
+
+<div class="modal-overlay" id="confirmationModal">
+  <div class="modal"><div class="warning-icon">⚠️</div><h2>Confirm Submission</h2>
+    <p>No details will be changed after submission. Please check your information carefully before continuing.</p>
+    <div class="modal-buttons"><button class="cancel-btn" onclick="cancelSubmission()">Cancel</button><button class="ok-btn" onclick="confirmSubmission()">OK</button></div>
+  </div>
+</div>
+
+<div class="success-screen" id="successScreen">
+  <div class="success-card">
+    <div class="logo">CC</div><div class="brand">CAREER COMPASS AI</div>
+    <div class="tick">✓</div>
+    <h1>Submission Successful</h1>
+    <p>Your registration is complete. Now let's build a career path around your interests, strengths and goals.</p>
+    <button class="primary" onclick="startBuildingCareer()">🚀 Start Building Your Career</button>
+  </div>
+</div>
+
+<section id="careerPage" class="career-page hidden">
+<div class="career-wrap">
+  <div class="progress" id="progress"><div class="step active"></div><div class="step"></div><div class="step"></div></div>
+
+  <div id="interestStep">
+    <div class="career-hero"><div class="mini-logo">CC</div><h1>What's Your Interest?</h1><p>Choose the field you like most. We'll use it to create your career options.</p></div>
+    <div class="interest-grid" id="interestGrid"></div>
+    <div class="actions"><button class="primary" onclick="continueFromInterest()">Continue →</button></div>
+  </div>
+
+  <div id="careerStep" class="hidden">
+    <div class="career-hero"><div class="mini-logo">CC</div><h1>Choose Your Career Direction</h1><p id="careerSubtitle">Based on your interest, here are suitable career paths.</p></div>
+    <div class="option-grid" id="careerOptions"></div>
+    <div id="selectedCareer" class="selected-career hidden"></div>
+    <div class="actions"><button class="secondary" onclick="backToInterest()">← Change Interest</button><button class="primary" onclick="buildRoadmap()">Build My Roadmap →</button></div>
+  </div>
+
+  <div id="roadmapStep" class="hidden">
+    <div class="career-hero"><div class="mini-logo">CC</div><h1>Your Personalized Roadmap</h1><p id="roadmapSubtitle"></p></div>
+    <div class="roadmap-controls">
+      <button class="tab active" onclick="showRoadmapTab('weekly',this)">🗓️ Weekly Roadmap</button>
+      <button class="tab" onclick="showRoadmapTab('resources',this)">🔗 Best Learning Links</button>
+    </div>
+    <div id="weeklyRoadmap" class="roadmap-grid"></div>
+    <div id="resources" class="resource-grid hidden"></div>
+    <div class="actions"><button class="secondary" onclick="backToCareer()">← Change Career</button><button class="primary" onclick="restartCareer()">Start Again</button></div>
+  </div>
+</div>
+</section>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const interests = [
+ {id:'technology',icon:'💻',name:'Technology & IT',desc:'Software, web, cloud, data and digital careers.'},
+ {id:'coding',icon:'👨‍💻',name:'Coding & Software',desc:'Programming, apps, websites and software development.'},
+ {id:'data',icon:'📊',name:'Data & Analytics',desc:'Excel, SQL, Python, dashboards and business insights.'},
+ {id:'design',icon:'🎨',name:'Design & Creative',desc:'UI/UX, graphics, content and creative technology.'},
+ {id:'business',icon:'📈',name:'Business & Management',desc:'Marketing, entrepreneurship, finance and management.'},
+ {id:'science',icon:'🔬',name:'Science & Research',desc:'Research, experiments, environment and scientific careers.'}
+];
+
+const careers = {
+ technology:[
+  ['💻','Frontend Developer','Build modern websites and interactive user interfaces.'],
+  ['⚙️','Backend Developer','Create APIs, databases and server-side systems.'],
+  ['☁️','Cloud Engineer','Work with cloud infrastructure, deployment and services.'],
+  ['🔐','Cybersecurity Analyst','Protect systems, networks and data from threats.'],
+  ['📊','Data Analyst','Turn data into useful insights and business decisions.']
+ ],
+ coding:[
+  ['🌐','Full Stack Developer','Build complete web applications from frontend to backend.'],
+  ['🐍','Python Developer','Use Python to build software, automation and data solutions.'],
+  ['📱','App Developer','Create useful mobile applications and digital products.'],
+  ['⚙️','Backend Developer','Build APIs, databases and scalable server systems.'],
+  ['🤖','AI / ML Beginner','Start with Python, data and machine-learning foundations.']
+ ],
+ data:[
+  ['📊','Data Analyst','Analyze data and create dashboards for decisions.'],
+  ['🧮','Business Analyst','Connect business problems with data-driven solutions.'],
+  ['🐍','Python Data Analyst','Use Python for cleaning, analysis and visualization.'],
+  ['🗄️','SQL Analyst','Work with databases and extract useful information.'],
+  ['📈','BI Developer','Build dashboards and business intelligence reports.']
+ ],
+ design:[
+  ['🎨','UI/UX Designer','Design user-friendly digital experiences.'],
+  ['🖥️','Web Designer','Create attractive and responsive website interfaces.'],
+  ['✨','Product Designer','Design digital products from idea to user experience.'],
+  ['🎬','Motion Designer','Create animated visual content and digital graphics.'],
+  ['📱','App UI Designer','Design clean and usable mobile interfaces.']
+ ],
+ business:[
+  ['📣','Digital Marketer','Use digital platforms to grow brands and businesses.'],
+  ['💼','Business Analyst','Analyze business needs and improve processes.'],
+  ['🚀','Entrepreneur','Turn ideas into products, services and ventures.'],
+  ['📊','Marketing Analyst','Use data to understand customers and campaigns.'],
+  ['👥','HR / People Operations','Work with recruitment, people and organizational growth.']
+ ],
+ science:[
+  ['🔬','Research Assistant','Support research, experiments and documentation.'],
+  ['🌱','Environmental Analyst','Use science and data for environmental problems.'],
+  ['🧪','Lab Technician','Work with laboratory procedures and scientific testing.'],
+  ['📊','Scientific Data Analyst','Analyze research data and communicate findings.'],
+  ['🧠','Research Data Associate','Combine research knowledge with data skills.']
+ ]
+};
+
+const roadmaps = {
+ 'Frontend Developer':[
+  ['Week 1','HTML + Web Basics',['HTML structure','Forms and semantic tags','Build a personal profile page'],'Practice'],
+  ['Week 2','CSS + Responsive Design',['Selectors and box model','Flexbox and Grid','Build a responsive landing page'],'Project'],
+  ['Week 3','JavaScript Basics',['Variables, conditions and functions','DOM and events','Build a calculator/to-do app'],'Practice'],
+  ['Week 4','Real Projects + Git',['Git/GitHub basics','Improve one project','Create portfolio + apply for beginner internships'],'Internship + Project']
+ ],
+ 'Backend Developer':[
+  ['Week 1','Programming Foundations',['Python/JavaScript basics','Functions and data structures','Small logic exercises'],'Practice'],
+  ['Week 2','APIs + Server Basics',['HTTP and REST','Build first API','Test endpoints'],'Project'],
+  ['Week 3','Databases',['SQL basics','CRUD operations','Connect database to API'],'Project'],
+  ['Week 4','Deployment + Portfolio',['Authentication basics','Deploy a project','Create GitHub portfolio and search internships'],'Internship + Project']
+ ],
+ 'Full Stack Developer':[
+  ['Week 1','HTML + CSS',['Semantic HTML','CSS layout','Responsive page'],'Practice'],
+  ['Week 2','JavaScript',['Functions and arrays','DOM/events','Interactive mini project'],'Practice + Project'],
+  ['Week 3','Backend + Database',['Node/Python backend','REST API','SQL/database CRUD'],'Project'],
+  ['Week 4','Full Stack Project',['Connect frontend + backend','Deploy project','Portfolio + internship applications'],'Internship + Project']
+ ],
+ 'Python Developer':[
+  ['Week 1','Python Basics',['Variables and input/output','Conditions and loops','Practice 15 small programs'],'Practice'],
+  ['Week 2','Functions + Data Structures',['Functions','Lists, dictionaries and sets','Mini CLI project'],'Practice + Project'],
+  ['Week 3','Files + APIs',['File handling','Exceptions','Use an API in a Python project'],'Project'],
+  ['Week 4','Portfolio + Career',['Build one complete project','GitHub README','Apply for beginner internships'],'Internship + Project']
+ ],
+ 'Data Analyst':[
+  ['Week 1','Excel + Data Cleaning',['Formulas and functions','Sort/filter and cleaning','Practice on a marks/sales dataset'],'Practice'],
+  ['Week 2','SQL',['SELECT, WHERE, ORDER BY','GROUP BY and aggregate functions','Solve 20 SQL questions'],'Practice'],
+  ['Week 3','Python + Visualization',['Pandas basics','Data cleaning','Charts and a mini analysis project'],'Project'],
+  ['Week 4','Dashboard + Career',['Build a dashboard','Write project explanation','Portfolio + internship applications'],'Internship + Project']
+ ],
+ 'Python Data Analyst':[
+  ['Week 1','Python Foundations',['Variables, loops and functions','Lists/dictionaries','Practice problems'],'Practice'],
+  ['Week 2','Pandas + Cleaning',['DataFrames','Missing/duplicate values','Clean a real dataset'],'Project'],
+  ['Week 3','Visualization',['Matplotlib basics','Charts and insights','Create an analysis report'],'Project'],
+  ['Week 4','SQL + Portfolio',['SQL basics','Combine SQL + Python knowledge','Publish portfolio and seek internships'],'Internship + Project']
+ ],
+ 'SQL Analyst':[
+  ['Week 1','SQL Basics',['SELECT and filtering','Sorting and limiting','Practice queries'],'Practice'],
+  ['Week 2','Aggregations',['COUNT, SUM, AVG','GROUP BY/HAVING','Business questions'],'Practice'],
+  ['Week 3','Joins',['INNER/LEFT JOIN','Subqueries','Build a sales analysis'],'Project'],
+  ['Week 4','Reporting',['Create insights','Dashboard basics','Portfolio + internship applications'],'Internship + Project']
+ ],
+ 'UI/UX Designer':[
+  ['Week 1','Design Foundations',['Visual hierarchy','Color and typography','Analyze 5 popular apps'],'Practice'],
+  ['Week 2','Wireframes',['User flows','Low-fidelity wireframes','Design a simple app flow'],'Project'],
+  ['Week 3','UI Design',['Components and spacing','Responsive screens','Create a 3-screen UI'],'Project'],
+  ['Week 4','Portfolio + Career',['Case study writing','Portfolio presentation','Apply for beginner design internships'],'Internship + Project']
+ ]
+};
+
+const defaultRoadmap = [
+ ['Week 1','Foundation',['Understand the fundamentals','Choose one learning resource','Practice every day'],'Practice'],
+ ['Week 2','Core Skills',['Learn the main tools','Complete guided exercises','Build a small task'],'Practice + Project'],
+ ['Week 3','Real Project',['Build one useful project','Document your work','Improve based on feedback'],'Project'],
+ ['Week 4','Career Launch',['Polish portfolio','Publish your project','Look for beginner internships and opportunities'],'Internship + Project']
+];
+
+const resources = {
+ 'Frontend Developer':[
+  ['MDN Web Docs','Excellent reference for HTML, CSS and JavaScript.','https://developer.mozilla.org/'],
+  ['freeCodeCamp','Free structured web-development learning and projects.','https://www.freecodecamp.org/'],
+  ['JavaScript.info','Detailed JavaScript learning path from basics onward.','https://javascript.info/']
+ ],
+ 'Backend Developer':[
+  ['MDN HTTP Guide','Understand HTTP, APIs and web fundamentals.','https://developer.mozilla.org/en-US/docs/Web/HTTP'],
+  ['freeCodeCamp','Backend and API development courses and projects.','https://www.freecodecamp.org/'],
+  ['PostgreSQL Tutorial','Useful SQL and database learning resource.','https://www.postgresql.org/docs/']
+ ],
+ 'Full Stack Developer':[
+  ['freeCodeCamp','Full-stack courses and hands-on projects.','https://www.freecodecamp.org/'],
+  ['MDN Web Docs','Strong reference for frontend and web fundamentals.','https://developer.mozilla.org/'],
+  ['GitHub Skills','Hands-on GitHub learning exercises.','https://skills.github.com/']
+ ],
+ 'Python Developer':[
+  ['Python Docs','Official Python documentation and tutorial.','https://docs.python.org/3/tutorial/'],
+  ['freeCodeCamp','Free Python courses and practice.','https://www.freecodecamp.org/'],
+  ['Real Python','Python tutorials and practical examples.','https://realpython.com/']
+ ],
+ 'Data Analyst':[
+  ['Microsoft Learn','Excel and data-related learning resources.','https://learn.microsoft.com/'],
+  ['Kaggle','Datasets, notebooks and practical data projects.','https://www.kaggle.com/'],
+  ['SQLBolt','Interactive SQL lessons and exercises.','https://sqlbolt.com/']
+ ],
+ 'Python Data Analyst':[
+  ['Pandas Documentation','Official guide for Python data analysis.','https://pandas.pydata.org/docs/'],
+  ['Kaggle','Practice with datasets and notebooks.','https://www.kaggle.com/'],
+  ['Matplotlib Documentation','Official charting and visualization guide.','https://matplotlib.org/stable/users/index.html']
+ ],
+ 'SQL Analyst':[
+  ['SQLBolt','Interactive SQL practice.','https://sqlbolt.com/'],
+  ['PostgreSQL Docs','Detailed database and SQL reference.','https://www.postgresql.org/docs/'],
+  ['Kaggle','SQL practice and datasets.','https://www.kaggle.com/']
+ ],
+ 'UI/UX Designer':[
+  ['Figma Learn','Learn the core tools and workflows for digital design.','https://help.figma.com/'],
+  ['Google UX Certificate','Structured UX learning pathway.','https://grow.google/certificates/ux-design/'],
+  ['Nielsen Norman Group','Useful UX research and usability articles.','https://www.nngroup.com/articles/']
+ ]
+};
+
+let selectedInterest = '';
+let selectedCareer = '';
+let pendingFormData = null;
+
+function generateCaptcha(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code='';
+  for(let i=0;i<5;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  $('captchaCode').textContent=code;
+  $('captchaInput').value='';
+}
+
+function openRegistration(){
+  $('home').classList.add('hidden');
+  $('registrationPage').classList.remove('hidden');
+  generateCaptcha();
+  window.scrollTo(0,0);
+}
+function goHome(){
+  $('registrationPage').classList.add('hidden');
+  $('home').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+function showMessage(feature){
+  alert(feature+' will open after your career profile is created. Start with Student Registration.');
+}
+
+function capitalizeText(value){
+  return value.length ? value.charAt(0).toUpperCase()+value.slice(1) : value;
+}
+
+document.querySelectorAll('input[type="text"], textarea').forEach(field=>{
+  field.addEventListener('input',function(){
+    if(this.id!=='captchaInput') this.value=capitalizeText(this.value);
+  });
+});
+
+function getSavedNames(){
+  try{return JSON.parse(localStorage.getItem('careerCompassNames')||'[]')}catch(e){return []}
+}
+function saveName(first,last){
+  const list=getSavedNames().filter(x=>!(x.first.toLowerCase()===first.toLowerCase()&&x.last.toLowerCase()===last.toLowerCase()));
+  list.unshift({first,last});
+  localStorage.setItem('careerCompassNames',JSON.stringify(list.slice(0,8)));
+}
+function showNameSuggestions(type){
+  const input=$(type==='first'?'firstName':'lastName');
+  const box=$(type==='first'?'firstSuggestions':'lastSuggestions');
+  const q=input.value.trim().toLowerCase();
+  const names=getSavedNames();
+  const values=[...new Set(names.map(n=>type==='first'?n.first:n.last))].filter(v=>!q||v.toLowerCase().startsWith(q));
+  if(!values.length){box.classList.add('hidden');return}
+  box.innerHTML=values.map(v=>`<button type="button" class="suggestion" data-value="${v.replace(/"/g,'&quot;')}">${v}</button>`).join('');
+  box.classList.remove('hidden');
+  box.querySelectorAll('.suggestion').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      input.value=btn.dataset.value;
+      box.classList.add('hidden');
+    });
+  });
+}
+['first','last'].forEach(type=>{
+  const input=$(type==='first'?'firstName':'lastName');
+  input.addEventListener('focus',()=>showNameSuggestions(type));
+  input.addEventListener('input',()=>showNameSuggestions(type));
+  input.addEventListener('blur',()=>setTimeout(()=>$(type==='first'?'firstSuggestions':'lastSuggestions').classList.add('hidden'),180));
+});
+
+$('registrationForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  if($('captchaInput').value.trim().toUpperCase()!==$('captchaCode').textContent){
+    alert('Incorrect CAPTCHA. Please try again.');
+    generateCaptcha();$('captchaInput').focus();return;
+  }
+  pendingFormData={first:$('firstName').value.trim(),last:$('lastName').value.trim()};
+  $('confirmationModal').style.display='flex';
+});
+function cancelSubmission(){$('confirmationModal').style.display='none'}
+function confirmSubmission(){
+  $('confirmationModal').style.display='none';
+  if(pendingFormData) saveName(pendingFormData.first,pendingFormData.last);
+  $('successScreen').style.display='flex';
+}
+function startBuildingCareer(){
+  $('successScreen').style.display='none';
+  $('registrationPage').classList.add('hidden');
+  $('careerPage').classList.remove('hidden');
+  renderInterests();
+  setProgress(1);
+  window.scrollTo(0,0);
+}
+
+function setProgress(n){
+  document.querySelectorAll('#progress .step').forEach((s,i)=>s.classList.toggle('active',i<n));
+}
+function renderInterests(){
+  $('interestGrid').innerHTML=interests.map(i=>`
+    <button class="choice ${selectedInterest===i.id?'selected':''}" onclick="selectInterest('${i.id}')">
+      <div class="emoji">${i.icon}</div><h3>${i.name}</h3><p>${i.desc}</p>
+    </button>`).join('');
+}
+function selectInterest(id){selectedInterest=id;renderInterests()}
+function continueFromInterest(){
+  if(!selectedInterest){alert('Please choose the field you like most.');return}
+  renderCareerOptions();
+  $('interestStep').classList.add('hidden');$('careerStep').classList.remove('hidden');setProgress(2);
+  window.scrollTo(0,0);
+}
+function renderCareerOptions(){
+  const field=interests.find(i=>i.id===selectedInterest);
+  $('careerSubtitle').textContent=`Because you selected ${field.name}, these 5 career options are highlighted for you. Choose one to continue.`;
+  $('careerOptions').innerHTML=careers[selectedInterest].map(c=>`
+    <button class="choice ${selectedCareer===c[1]?'selected':''}" onclick="selectCareer('${c[1].replace(/'/g,"\\'")}')">
+      <div class="emoji">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p>
+    </button>`).join('');
+}
+function selectCareer(name){
+  selectedCareer=name;
+  $('selectedCareer').textContent='Selected career: '+name;
+  $('selectedCareer').classList.remove('hidden');
+  renderCareerOptions();
+}
+function backToInterest(){
+  $('careerStep').classList.add('hidden');$('interestStep').classList.remove('hidden');setProgress(1);window.scrollTo(0,0);
+}
+function buildRoadmap(){
+  if(!selectedCareer){alert('Please choose a career option first.');return}
+  $('careerStep').classList.add('hidden');$('roadmapStep').classList.remove('hidden');
+  $('roadmapSubtitle').textContent=`A starter plan for ${selectedCareer}, including practice, projects, internships and learning resources.`;
+  renderRoadmap();renderResources();setProgress(3);window.scrollTo(0,0);
+}
+function renderRoadmap(){
+  const data=roadmaps[selectedCareer]||defaultRoadmap;
+  $('weeklyRoadmap').innerHTML=data.map(w=>`
+    <article class="week-card">
+      <h3>${w[0]}</h3><div class="focus">${w[1]}</div>
+      <ul>${w[2].map(x=>`<li>${x}</li>`).join('')}</ul>
+      <span class="badge">${w[3]}</span>
+    </article>`).join('');
+}
+function renderResources(){
+  const data=resources[selectedCareer]||[
+    ['freeCodeCamp','Free courses and practical projects across many technology fields.','https://www.freecodecamp.org/'],
+    ['Khan Academy','Free learning resources for building fundamentals.','https://www.khanacademy.org/'],
+    ['GitHub','Store projects, learn Git workflows and build your portfolio.','https://github.com/']
+  ];
+  $('resources').innerHTML=data.map(r=>`
+    <article class="resource"><h3>${r[0]}</h3><p>${r[1]}</p><a href="${r[2]}" target="_blank" rel="noopener">Open Learning Resource →</a></article>`).join('');
+}
+function showRoadmapTab(tab,button){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));button.classList.add('active');
+  $('weeklyRoadmap').classList.toggle('hidden',tab!=='weekly');
+  $('resources').classList.toggle('hidden',tab!=='resources');
+}
+function backToCareer(){
+  $('roadmapStep').classList.add('hidden');$('careerStep').classList.remove('hidden');setProgress(2);window.scrollTo(0,0);
+}
+function restartCareer(){
+  selectedInterest='';selectedCareer='';
+  $('roadmapStep').classList.add('hidden');$('interestStep').classList.remove('hidden');setProgress(1);renderInterests();window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
